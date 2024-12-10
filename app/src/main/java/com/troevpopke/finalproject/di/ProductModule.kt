@@ -4,6 +4,8 @@ import com.troevpopke.feature.home.data.ProductRepository
 import com.troevpopke.feature.home.data.ProductRepositoryImpl
 import com.troevpopke.feature.home.network.ProductApiService
 import com.troevpopke.feature.home.network.ProductInstance
+import com.troevpopke.feature_details.data.ProductDetailsRepository
+import com.troevpopke.feature_details.data.ProductDetailsRepositoryImpl
 import dagger.Binds
 import dagger.Module
 import dagger.Provides
@@ -37,4 +39,7 @@ interface ProductsBindsModule {
 
     @Binds
     fun bindProductRepository(impl: ProductRepositoryImpl): ProductRepository
+
+    @Binds
+    fun bindProductDetails(impl: ProductDetailsRepositoryImpl): ProductDetailsRepository
 }
