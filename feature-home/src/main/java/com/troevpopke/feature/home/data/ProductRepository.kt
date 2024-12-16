@@ -1,7 +1,7 @@
 package com.troevpopke.feature.home.data
 
 import android.util.Log
-import com.troevpopke.feature.home.models.Products
+import com.troevpopke.common.models.Products
 import com.troevpopke.feature.home.network.ProductApiService
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow

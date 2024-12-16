@@ -25,7 +25,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil3.compose.AsyncImage
-import com.troevpopke.feature.home.models.Product
+import com.troevpopke.common.models.Product
 import com.troevpopke.feature.home.viewmodel.ProductViewModel
 
 @Composable

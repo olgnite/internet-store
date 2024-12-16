@@ -3,7 +3,7 @@ package com.troevpopke.feature.home.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.troevpopke.feature.home.data.ProductRepository
-import com.troevpopke.feature.home.models.Products
+import com.troevpopke.common.models.Products
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.map

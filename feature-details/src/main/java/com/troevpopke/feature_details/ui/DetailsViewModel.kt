@@ -4,7 +4,7 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
-import com.troevpopke.feature.home.models.Product
+import com.troevpopke.common.models.Product
 import com.troevpopke.feature_details.data.ProductDetailsRepository
 import com.troevpopke.feature_details.navigation.DetailsScreen
 import dagger.hilt.android.lifecycle.HiltViewModel

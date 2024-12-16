@@ -1,4 +1,4 @@
-package com.troevpopke.feature.home.models
+package com.troevpopke.common.models
 
 data class Product(
     val id: String,

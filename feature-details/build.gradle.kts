@@ -9,7 +9,7 @@ plugins {
 
 android {
     namespace = "com.troevpopke.feature_details"
-    compileSdk = 34
+    compileSdk = 35
 
     defaultConfig {
         minSdk = 24
