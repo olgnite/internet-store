@@ -15,13 +15,13 @@ class CartViewModel @Inject constructor(
         data class Content(val list: List<Product>) : State
     }
 
-    val state = repository.getProducts()
+    val state = repository.getFlow()
 
     public fun addProduct(product: Product) {
         repository.addProduct(product)
     }
 
-    public fun removePreoduct(id: String) {
-        repository.removeProduct(id)
+    public fun removeProduct(product: Product) {
+        repository.removeProduct(product.id)
     }
 }
