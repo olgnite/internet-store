@@ -27,15 +27,19 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil3.compose.AsyncImage
 import com.troevpopke.common.models.Product
+import com.troevpopke.common.ui.CommonHeader
 import com.troevpopke.feature_cart.data.CartProduct
 
 @Composable
 fun CartScreen(
     viewModel: CartViewModel = hiltViewModel(),
+    onBackClick: () -> Unit,
 ) {
     val state by viewModel.state.collectAsState()
 
-    Scaffold() { padding ->
+    Scaffold(
+        topBar = { CommonHeader(onBackClick = onBackClick) }
+    ) { padding ->
         LazyColumn(
             contentPadding = padding,
             modifier = Modifier
