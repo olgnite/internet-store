@@ -1,10 +1,15 @@
 package com.troevpopke.feature.home.presentation
 
 import android.util.Log
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.expandVertically
+import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -13,9 +18,13 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.ShoppingCart
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -23,17 +32,25 @@ import androidx.compose.material3.OutlinedCard
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil3.compose.AsyncImage
 import com.troevpopke.common.models.Product
 import com.troevpopke.common.ui.CommonHeader
+import com.troevpopke.common.ui.LoadingAnimation
+import com.troevpopke.common.ui.theme.PurpleGrey80
+import com.troevpopke.common.ui.theme.White80
 import com.troevpopke.feature.home.viewmodel.ProductViewModel
 
 @Composable
@@ -56,37 +73,13 @@ fun HomeScreen(
                 onProductClick = onProductClick,
                 onCartClick = onCartClick,
                 onProfileClick = onProfileClick,
-                onAddProduct = { viewModel.addToCart(it) }
+                onAddProduct = { viewModel.addToCart(it) },
+                onSearchQueryChanged = { viewModel.updateSearchQuery(it) }
             )
         }
     }
 }
 
-@Composable
-fun LoadingAnimation() {
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(Color.White),
-        contentAlignment = Alignment.Center
-    ) {
-        Column(
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center
-        ) {
-            androidx.compose.material3.CircularProgressIndicator(
-                color = Color(0xFF6200EE),
-                strokeWidth = 4.dp
-            )
-            Spacer(modifier = Modifier.height(16.dp))
-            Text(
-                text = "Загрузка...",
-                fontSize = 16.sp,
-                color = Color.Gray,
-            )
-        }
-    }
-}
 
 @Composable
 fun Content(
@@ -94,36 +87,129 @@ fun Content(
     onProductClick: (id: String) -> Unit,
     onCartClick: () -> Unit,
     onProfileClick: () -> Unit,
-    onAddProduct: (product: Product) -> Unit
+    onAddProduct: (product: Product) -> Unit,
+    onSearchQueryChanged: (String) -> Unit,
 ) {
-    Scaffold(
-        topBar = {
-            CommonHeader(
-                actions = {
-                    IconButton(onClick = onProfileClick) { Icon(Icons.Default.AccountCircle, null) }
-                    IconButton(onClick = onCartClick) { Icon(Icons.Default.ShoppingCart, null) }
-                }
-            )
-        }
-    ) { padding ->
-        LazyColumn(
-            contentPadding = padding,
+    var isSearchVisible by remember { mutableStateOf(false) }
+    var searchQuery by remember { mutableStateOf("") }
+
+    LaunchedEffect(Unit) {
+        isSearchVisible = false
+        searchQuery = ""
+        onSearchQueryChanged("")
+    }
+
+    Scaffold { paddingValues ->
+        Column(
             modifier = Modifier
                 .fillMaxSize()
                 .background(Color.Black)
-                .padding(16.dp),
-            verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
-            items(products, key = { it.id }) {
-                ProductItem(
-                    product = it,
-                    onClick = { onProductClick(it.id) },
-                    onAddProduct = { onAddProduct(it) }
+            CommonHeader(
+                actions = {
+                    IconButton(onClick = onProfileClick) {
+                        Icon(Icons.Default.AccountCircle, contentDescription = "Profile")
+                    }
+                    IconButton(onClick = onCartClick) {
+                        Icon(Icons.Default.ShoppingCart, contentDescription = "Cart")
+                    }
+                    IconButton(onClick = { isSearchVisible = !isSearchVisible }) {
+                        Icon(Icons.Default.Search, contentDescription = "Search")
+                    }
+                }
+            )
+
+            AnimatedVisibility(
+                visible = isSearchVisible,
+                enter = expandVertically(),
+                exit = shrinkVertically()
+            ) {
+                SearchBar(
+                    query = searchQuery,
+                    onQueryChanged = {
+                        searchQuery = it
+                        onSearchQueryChanged(it)
+                    },
                 )
+            }
+
+            // Список товаров
+            LazyColumn(
+                contentPadding = PaddingValues(
+                    top = paddingValues.calculateTopPadding(),
+                    start = 16.dp,
+                    end = 16.dp,
+                    bottom = paddingValues.calculateBottomPadding()
+                ),
+                verticalArrangement = Arrangement.spacedBy(16.dp),
+                modifier = Modifier.fillMaxSize()
+            ) {
+                items(products, key = { it.id }) { product ->
+                    ProductItem(
+                        product = product,
+                        onClick = { onProductClick(product.id) },
+                        onAddProduct = { onAddProduct(product) }
+                    )
+                }
             }
         }
     }
+}
 
+@Composable
+fun SearchBar(
+    query: String,
+    onQueryChanged: (String) -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    Box(
+        modifier = modifier
+            .fillMaxWidth()
+            .padding(horizontal = 16.dp, vertical = 8.dp)
+            .background(White80, RoundedCornerShape(12.dp))
+            .border(1.dp, Color.Gray, RoundedCornerShape(12.dp))
+            .padding(horizontal = 16.dp, vertical = 8.dp)
+    ) {
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            BasicTextField(
+                value = query,
+                onValueChange = onQueryChanged,
+                singleLine = true,
+                modifier = Modifier
+                    .weight(1f)
+                    .padding(8.dp),
+                textStyle = TextStyle(
+                    color = Color.Black,
+                    fontSize = 16.sp
+                ),
+                decorationBox = { innerTextField ->
+                    if (query.isEmpty()) {
+                        Text(
+                            text = "Search products...",
+                            color = Color.Gray,
+                            fontSize = 16.sp
+                        )
+                    }
+                    innerTextField()
+                }
+            )
+
+            if (query.isNotEmpty()) {
+                IconButton(onClick = {
+                    onQueryChanged("")
+                }) {
+                    Icon(
+                        imageVector = Icons.Default.Close,
+                        contentDescription = "Clear search",
+                        tint = Color.Gray
+                    )
+                }
+            }
+        }
+    }
 }
 
 @Composable
