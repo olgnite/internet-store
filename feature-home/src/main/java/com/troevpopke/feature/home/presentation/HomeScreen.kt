@@ -36,6 +36,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import coil3.compose.AsyncImage
 import com.troevpopke.common.models.Product
 import com.troevpopke.feature.home.viewmodel.ProductViewModel
+import com.troevpopke.feature_cart.data.CartProduct
 
 @Composable
 fun HomeScreen(
@@ -45,6 +46,8 @@ fun HomeScreen(
     onProfileClick: () -> Unit,
 ) {
     val state by viewModel.state.collectAsState()
+
+    val stateCart by viewModel.stateCart.collectAsState()
 
     when (val state = state) {
         ProductViewModel.State.Loading -> {
@@ -57,7 +60,8 @@ fun HomeScreen(
                 onProductClick = onProductClick,
                 onCartClick = onCartClick,
                 onProfileClick = onProfileClick,
-                onAddProduct = { viewModel.addToCart(it) }
+                onAddProduct = { viewModel.addToCart(it) },
+                stateCart = stateCart
             )
         }
     }
@@ -96,7 +100,8 @@ fun Content(
     onProductClick: (id: String) -> Unit,
     onCartClick: () -> Unit,
     onProfileClick: () -> Unit,
-    onAddProduct: (product: Product) -> Unit
+    onAddProduct: (product: Product) -> Unit,
+    stateCart: List<CartProduct>
 ) {
     Scaffold(
         topBar = {
@@ -120,18 +125,19 @@ fun Content(
             items(products, key = { it.id }) {
                 ProductItem(
                     product = it,
+                    count = stateCart.find { p -> p.product.id === it.id }?.count ?: 0,
                     onClick = { onProductClick(it.id) },
                     onAddProduct = { onAddProduct(it) }
                 )
             }
         }
     }
-
 }
 
 @Composable
 fun ProductItem(
     product: Product,
+    count: Int,
     onClick: () -> Unit,
     onAddProduct: (product: Product) -> Unit
 ) {
@@ -141,22 +147,32 @@ fun ProductItem(
         modifier = Modifier.fillMaxWidth()
     ) {
         Column(
-            modifier = Modifier.padding(16.dp)
+            modifier = Modifier.padding(16.dp),
+            verticalArrangement = Arrangement.Center
         ) {
+            AsyncImage(
+                modifier = Modifier.height(120.dp),
+                model = product.images[0],
+                contentDescription = null
+            )
             Row(
                 modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween
-            ) {
-                AsyncImage(
-                    modifier = Modifier.height(120.dp),
-                    model = product.images[0],
-                    contentDescription = null
-                )
-                IconButton(onClick = { onAddProduct(product) }) {
-                    Icon(
-                        Icons.Default.Add,
-                        null
+                horizontalArrangement = Arrangement.SpaceBetween,
+                ) {
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text(
+                        text = count.toString(),
+                        fontSize = 18.sp
                     )
+                    IconButton(onClick = { onAddProduct(product) }) {
+                        Icon(
+                            Icons.Default.Add,
+                            null
+                        )
+                    }
                 }
             }
             Spacer(Modifier.height(16.dp))

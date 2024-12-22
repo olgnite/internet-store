@@ -15,6 +15,7 @@ import com.troevpopke.feature_details.navigation.DetailsScreen
 import com.troevpopke.feature_details.ui.DetailsScreen
 import dagger.hilt.android.AndroidEntryPoint
 import com.example.feature_profile.navigation.ProfileScreen
+import com.example.feature_profile.ui.ProfileScreen
 import com.troevpopke.feature_cart.ui.CartScreen
 
 @AndroidEntryPoint
@@ -45,7 +46,7 @@ class MainActivity : ComponentActivity() {
                     CartScreen()
                 }
                 composable<ProfileScreen> {
-
+                    ProfileScreen()
                 }
             }
         }
