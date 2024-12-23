@@ -1,7 +1,7 @@
-package com.troevpopke.feature.home.network
+package com.troevpopke.feature.home.data
 
 import com.troevpopke.common.models.Product
-import com.troevpopke.common.models.Products
+import com.troevpopke.feature.home.domain.Products
 import retrofit2.http.GET
 import retrofit2.http.Path
 

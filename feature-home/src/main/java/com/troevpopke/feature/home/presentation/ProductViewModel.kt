@@ -1,16 +1,15 @@
-package com.troevpopke.feature.home.viewmodel
+package com.troevpopke.feature.home.presentation
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.troevpopke.common.models.Product
-import com.troevpopke.feature.home.data.ProductRepository
-import com.troevpopke.common.models.Products
+import com.troevpopke.feature.home.domain.ProductRepository
+import com.troevpopke.feature.home.domain.Products
 import com.troevpopke.feature_cart.data.CartRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import javax.inject.Inject
 

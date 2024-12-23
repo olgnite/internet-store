@@ -1,8 +1,8 @@
 package com.troevpopke.finalproject.di
 
-import com.troevpopke.feature.home.data.ProductRepository
+import com.troevpopke.feature.home.domain.ProductRepository
 import com.troevpopke.feature.home.data.ProductRepositoryImpl
-import com.troevpopke.feature.home.network.ProductApiService
+import com.troevpopke.feature.home.data.ProductApiService
 import com.troevpopke.feature_details.data.ProductDetailsRepository
 import com.troevpopke.feature_details.data.ProductDetailsRepositoryImpl
 import dagger.Binds
