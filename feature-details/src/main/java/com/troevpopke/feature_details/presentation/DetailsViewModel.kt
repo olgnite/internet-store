@@ -1,4 +1,4 @@
-package com.troevpopke.feature_details.ui
+package com.troevpopke.feature_details.presentation
 
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel

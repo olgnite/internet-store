@@ -1,4 +1,4 @@
-package com.troevpopke.feature_cart.ui
+package com.troevpopke.feature_cart.presentation
 
 import androidx.lifecycle.ViewModel
 import com.troevpopke.common.models.Product

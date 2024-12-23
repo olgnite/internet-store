@@ -1,4 +1,4 @@
-package com.troevpopke.feature_details.ui
+package com.troevpopke.feature_details.presentation
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
